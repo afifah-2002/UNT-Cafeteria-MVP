@@ -1,0 +1,11 @@
+# Root .gitignore
+node_modules/
+*.log
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+untcafe/.expo/
+untcafe/web-build/
+backend/coverage/
