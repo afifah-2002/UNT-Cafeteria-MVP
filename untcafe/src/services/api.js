@@ -1,9 +1,11 @@
-import axios from 'axios';
 
-//replace with your local IPv4
-const Ipv4 = '192.168.1.138';
+import axios from 'axios';
+import { config } from 'dotenv';
+
+config(); // Load from .env
+
 const api = axios.create({
-    baseURL: `http://${Ipv4}:5000`, // Update with your backend URL
+    baseURL: `http://${process.env.API_IP}:5000`,
 });
 
 export const getHomeData = async () => {
