@@ -15,12 +15,16 @@ const MyUNTHeaderTitle = () => {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#fff',
+    overflow: 'hidden',
+    width: '100%'
   },
   image: {
-    width: 180,
-    height: 60, // adjust this for height
+    height: '60%',
+    paddingTop: '10'
   },
 });
 

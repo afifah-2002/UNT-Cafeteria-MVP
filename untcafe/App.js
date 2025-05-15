@@ -42,21 +42,19 @@ export default function App() {
           name="Home"
           component={HomeScreen}
           options={{
-            headerTitle: () => <MyUNTHeaderTitle />,
             headerStyle: {
               backgroundColor: '#ffffff',
-              height: 130,
-
-               // ✅ Shadow for iOS
+              // ✅ Shadow for iOS
               shadowColor: '#000',
               shadowOffset: { width: 0, height: 4 },
               shadowOpacity: 0.1,
               shadowRadius: 6,
 
-            // ✅ Elevation for Android
+              // ✅ Elevation for Android
               elevation: 8,
             },
-             headerTransparent: false,
+            headerShown: false,
+            headerTransparent: false,
           }}
         />
       </Stack.Navigator>
