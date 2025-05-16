@@ -1,15 +1,24 @@
+
+
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import BottomNavBar from '../components/bottomNavBar';
 import RestaurantCard from '../components/RestaurantCard';
 
+// Get screen height
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
-
+// Set space taken up by fixed UI elements
+const HEADER_HEIGHT = 130;
+const NAVBAR_HEIGHT = 60;
+const CONTENT_HEIGHT = SCREEN_HEIGHT - HEADER_HEIGHT - NAVBAR_HEIGHT;
 
 const HomeScreen = () => {
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView
+        contentContainerStyle={[styles.content, { minHeight: CONTENT_HEIGHT }]}
+      >
         <Text style={styles.greeting}>Hi Joel, Welcome back</Text>
 
         <RestaurantCard
@@ -36,10 +45,10 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingBottom: 60,
   },
   content: {
     padding: 16,
+    paddingBottom: 60, // Extra space above the bottom nav
   },
   greeting: {
     fontSize: 22,
