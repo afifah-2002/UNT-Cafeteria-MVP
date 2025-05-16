@@ -20,11 +20,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#fff',
     overflow: 'hidden',
-    width: '100%'
+    width: '100%',
   },
   image: {
-    height: '60%',
-    paddingTop: '10'
+    height: '65%',
+    width: '100%',
+    marginTop: '10'
   },
 });
 
