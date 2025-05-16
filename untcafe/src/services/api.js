@@ -1,18 +1,19 @@
 import axios from 'axios';
-import { config } from 'dotenv';
+// import { config } from 'dotenv';
 
 config(); // Load from .env
 
 const api = axios.create({
-    baseURL: `http://${process.env.API_IP}:5000`,
+  // baseURL: `http://${process.env.API_IP}:5000`,
+  baseURL: `http://192.168.1.138:5000`,
 });
 
 export const getHomeData = async () => {
-    try {
-        const response = await api.get('/');
-        return response.data;
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
+  try {
+    const response = await api.get('/');
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };

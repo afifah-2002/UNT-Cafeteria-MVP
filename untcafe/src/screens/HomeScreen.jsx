@@ -1,16 +1,31 @@
+
+
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import BottomNavBar from '../components/bottomNavBar';
 import RestaurantCard from '../components/RestaurantCard';
+import MyUNTHeaderTitle from '../components/MyUNTHeaderTitle';
 
-
-
+// Get screen height
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const BASE_FONT_SIZE = 12;
+const SCREEN_WIDTH_SCALE_FACTOR = 0.015;
+const dynamicFontSize = BASE_FONT_SIZE + (SCREEN_WIDTH * SCREEN_WIDTH_SCALE_FACTOR);
 
 const HomeScreen = () => {
+
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.greeting}>Hi Joel, Welcome back</Text>
+
+      <View style={styles.header}>
+        <MyUNTHeaderTitle />
+
+      </View>
+
+      <ScrollView
+        contentContainerStyle={styles.content}
+      >
+        <Text style={[styles.greeting, { fontSize: dynamicFontSize }]}>Hi Joel, Welcome back</Text>
 
         <RestaurantCard
           image={require('../../assets/images/burger.jpg')}
@@ -36,16 +51,18 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingBottom: 60,
   },
   content: {
     padding: 16,
+    paddingBottom: 60, // Extra space above the bottom nav
   },
   greeting: {
-    fontSize: 22,
-    fontWeight: '600',
-    marginBottom: 16,
+    fontSize: 18,
+    fontWeight: '600'
   },
+  header: {
+    height: '11%'
+  }
 });
 
 export default HomeScreen;
