@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    height: 82,
+    height: '10%',
     paddingVertical: 10,
     borderTopWidth: 0.5,
     borderColor: '#ccc',
@@ -53,6 +53,9 @@ const styles = StyleSheet.create({
     // Android shadow
     elevation: 8,
   },
+  navButton: {
+    padding: 10,
+  }
 });
 
 export default BottomNavBar;
