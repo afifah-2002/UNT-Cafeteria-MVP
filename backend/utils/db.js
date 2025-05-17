@@ -3,7 +3,7 @@ require('dotenv').config();
 
 
 const dbURI = process.env.MONGODB_URI;
-
+console.log("Connecting to:", dbURI);
 const connectDB = async () => {
     try {
 

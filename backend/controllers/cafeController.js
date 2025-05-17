@@ -19,23 +19,24 @@ exports.getAllCafes = async (req, res) => {
 // @route   GET /api/cafes/:cafeId/categories
 // @access  Public
 exports.getCategoriesByCafe = async (req, res) => {
-    try {
-        const cafeId = req.params.cafeId;
-        const cafe = await Cafe.findById(cafeId).populate('categories', 'name -_id -__v');
-        if (!cafe) {
-            return res.status(404).json({ message: 'Cafe not found' });
-        }
+  try {
+    const cafeId = req.params.cafeId;
+    const cafe = await Cafe.findById(cafeId).populate('categories', 'name'); // ✅ Fixed
 
-
-        res.json(cafe.categories);
-    } catch (err) {
-        console.error(err);
-        if (err.kind === 'ObjectId') {
-            return res.status(400).json({ message: 'Invalid Cafe ID format' });
-        }
-        res.status(500).json({ message: 'Server Error' });
+    if (!cafe) {
+      return res.status(404).json({ message: 'Cafe not found' });
     }
+
+    res.json(cafe.categories);
+  } catch (err) {
+    console.error('Error in getCategoriesByCafe:', err);
+    if (err.kind === 'ObjectId') {
+      return res.status(400).json({ message: 'Invalid Cafe ID format' });
+    }
+    res.status(500).json({ message: 'Server Error' });
+  }
 };
+
 
 // @desc    Get items for a specific category
 // @route   GET /api/categories/:categoryId/items
