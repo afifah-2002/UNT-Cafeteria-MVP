@@ -12,9 +12,21 @@ const BottomNavBar = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: bgColor }]}>
-      <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+      {/* <TouchableOpacity onPress={() => navigation.navigate('Home')}>
         <Feather name="home" size={22} color={iconColor} />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
+
+      <TouchableOpacity
+        onPress={() =>
+        navigation.reset({
+        index: 0,
+        routes: [{ name: 'Home' }],
+        })
+      }
+>
+     <Feather name="home" size={22} color={iconColor} />
+    </TouchableOpacity>
+
 
       <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
         <Feather name="shopping-cart" size={22} color={iconColor} />
