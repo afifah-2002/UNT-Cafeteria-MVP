@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native';
-import BottomNavBar from '../components/bottomNavBar';
-import RestaurantCard from '../components/RestaurantCard';
+import BottomNavBar from './bottomNavBar';
+import RestaurantCard from './RestaurantCard';
 
 // Get screen height
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');

@@ -1,17 +1,23 @@
 const express = require('express');
-const cors = require('cors');
-require('dotenv').config();
+  const authRoutes = require('./routes/auth');
+  const connectDB = require('./config/db');
+  require('dotenv').config();
+  const cors = require('cors');
 
-const app = express();
-const PORT = process.env.PORT || 5000;
+  const app = express();
 
-app.use(cors());
-app.use(express.json());
+  // Configure CORS for Expo tunnel
+  app.use(cors({
+    origin: 'https://exp.direct', // Match Expo dev server with --tunnel
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  }));
 
-app.get('/', (req, res) => {
-    res.send('Backend is running!');
-});
+  app.use(express.json());
+  app.use('/api', authRoutes);
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+  // Connect to MongoDB via Mongoose
+  connectDB().then(() => {
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  });
