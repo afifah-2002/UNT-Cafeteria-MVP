@@ -10,7 +10,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import MyUNTHeaderTitle from './MyUNTHeaderTitle';
+import MyUNTHeaderTitle from '../components/MyUNTHeaderTitle';
 import Checkbox from 'expo-checkbox';
 import { login } from '../controllers/auth';
 
