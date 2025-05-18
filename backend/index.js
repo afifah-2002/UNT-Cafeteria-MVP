@@ -1,23 +1,27 @@
+require('dotenv').config();
 const express = require('express');
-  const authRoutes = require('./routes/auth');
-  const connectDB = require('./config/db');
-  require('dotenv').config();
-  const cors = require('cors');
+const cors = require('cors');
+const connectDB = require('./config/db.js');
+const cafeRoutes = require('./routes/cafeRoutes');
+const bodyParser = require('body-parser');
 
-  const app = express();
+const app = express();
+const PORT = process.env.PORT || 5000;
 
-  // Configure CORS for Expo tunnel
-  app.use(cors({
-    origin: 'https://exp.direct', // Match Expo dev server with --tunnel
-    methods: ['GET', 'POST', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-  }));
+connectDB();
 
-  app.use(express.json());
-  app.use('/api', authRoutes);
+app.use(cors());
+app.use(express.json());
 
-  // Connect to MongoDB via Mongoose
-  connectDB().then(() => {
-    const PORT = process.env.PORT || 5000;
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-  });
+app.use(bodyParser.json());
+
+app.use('/api', cafeRoutes);
+
+
+app.get('/', (req, res) => {
+    res.send('UNT Cafe API is running!');
+});
+
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
