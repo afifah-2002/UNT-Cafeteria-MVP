@@ -1,8 +1,6 @@
 import axios from 'axios';
-// import { config } from 'dotenv';
 
-config(); // Load from .env
-
+const Ipv4 = '192.168.1.230';
 const api = axios.create({
   // baseURL: `http://${process.env.API_IP}:5000`,
   baseURL: `http://192.168.1.138:5000`,

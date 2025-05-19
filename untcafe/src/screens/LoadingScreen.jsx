@@ -118,7 +118,7 @@ const LoadingComponent = () => {
   }, []);
 
   const navigateToHome = () => {
-    navigation.replace('Home');
+    navigation.replace('Login');
   };
 
   return (

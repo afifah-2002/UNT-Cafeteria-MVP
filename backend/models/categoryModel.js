@@ -6,7 +6,11 @@ const categorySchema = new mongoose.Schema({
     required: true,
     trim: true
   },
-
+  imageUrl: {
+    type: String,
+    trim: true,
+    default: ''
+  },
   cafe: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Cafe',

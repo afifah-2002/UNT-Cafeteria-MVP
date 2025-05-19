@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const cafeController = require('../controllers/cafeController.js');
-
+const authController = require('../controllers/authController.js');
 // @route   GET /api/cafes
 // @desc    Get all cafes
 router.get('/cafes', cafeController.getAllCafes);
@@ -29,5 +29,9 @@ router.post('/cafes/:cafeId/categories', cafeController.createCategoryForCafe);
 // @route   POST /api/categories/:categoryId/items
 // @desc    Create a new item for a category
 router.post('/categories/:categoryId/items', cafeController.createItemForCategory);
+
+// @route   POST /api/login
+// @desc    Handle user login
+router.post('/login', authController.login);
 
 module.exports = router;

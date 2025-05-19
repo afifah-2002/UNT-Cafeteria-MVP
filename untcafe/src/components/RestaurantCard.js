@@ -3,7 +3,7 @@ import { View, Text, Image, StyleSheet, useColorScheme } from 'react-native';
 import { FontAwesome, Feather } from '@expo/vector-icons';
 import { RFValue } from 'react-native-responsive-fontsize';
 
-const RestaurantCard = ({ image, title, subtitle, rating, time }) => {
+const RestaurantCard = ({ image, title, subtitle, rating, time, location }) => {
   const isDarkMode = useColorScheme() === 'dark';
 
   return (
@@ -15,7 +15,7 @@ const RestaurantCard = ({ image, title, subtitle, rating, time }) => {
         <FontAwesome name="star" size={14} color="#f5a623" />
         <Text style={styles.infoText}>{rating}</Text>
         <Feather name="clock" size={14} color="#f5a623" style={{ marginLeft: 10 }} />
-        <Text style={styles.infoText}>{time}</Text>
+        <Text style={styles.infoText}>{location}</Text>
       </View>
     </View>
   );

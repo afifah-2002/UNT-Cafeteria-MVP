@@ -21,7 +21,8 @@ exports.getAllCafes = async (req, res) => {
 exports.getCategoriesByCafe = async (req, res) => {
     try {
         const cafeId = req.params.cafeId;
-        const cafe = await Cafe.findById(cafeId).populate('categories', 'name -_id -__v');
+        const cafe = await Cafe.findById(cafeId).populate('categories', 'name imageUrl');
+
         if (!cafe) {
             return res.status(404).json({ message: 'Cafe not found' });
         }
@@ -100,6 +101,7 @@ exports.createCafe = async (req, res) => {
 // @access  Public (for initial data population, would likely require auth in production)
 exports.createCategoryForCafe = async (req, res) => {
     try {
+        // console.log(req.body)
         const cafeId = req.params.cafeId;
         const cafe = await Cafe.findById(cafeId);
 
@@ -109,6 +111,7 @@ exports.createCategoryForCafe = async (req, res) => {
 
         const newCategory = new Category({
             name: req.body.name,
+            imageUrl: req.body.imageUrl,
             cafe: cafeId
         });
 

@@ -1,8 +1,11 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const connectDB = require('./utils/db.js');
+const connectDB = require('./config/db.js');
+
 const cafeRoutes = require('./routes/cafeRoutes');
+const loginRoutes = require('./routes/loginRoutes.js');
+
 const bodyParser = require('body-parser');
 
 const app = express();
@@ -16,6 +19,7 @@ app.use(express.json());
 app.use(bodyParser.json());
 
 app.use('/api', cafeRoutes);
+app.use('/api', loginRoutes);
 
 
 app.get('/', (req, res) => {
