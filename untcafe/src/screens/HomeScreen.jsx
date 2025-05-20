@@ -16,7 +16,7 @@ const NAVBAR_HEIGHT = 60;
 const CONTENT_HEIGHT = SCREEN_HEIGHT - HEADER_HEIGHT - NAVBAR_HEIGHT;
 
 const HomeScreen = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation();          
 
   const [cafes, setCafes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -80,7 +80,7 @@ const HomeScreen = () => {
                 title={cafe.name}
                 subtitle={cafe.description} // Assuming description can serve as subtitle
                 rating={cafe.rating ? cafe.rating.toFixed(1) : 'N/A'} // Assuming rating is a number
-                time={cafe.deliveryTime || 'N/A'} // Assuming deliveryTime exists
+                
                 location={String(cafe.location || 'N/A')}
               />
             </TouchableOpacity>

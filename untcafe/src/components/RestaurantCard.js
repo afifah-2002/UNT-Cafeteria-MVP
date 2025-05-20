@@ -3,19 +3,22 @@ import { View, Text, Image, StyleSheet, useColorScheme } from 'react-native';
 import { FontAwesome, Feather } from '@expo/vector-icons';
 import { RFValue } from 'react-native-responsive-fontsize';
 
-const RestaurantCard = ({ image, title, subtitle, rating, time, location }) => {
+const RestaurantCard = ({ imageUrl, title, subtitle, rating, time, location,price }) => {
   const isDarkMode = useColorScheme() === 'dark';
 
   return (
     <View style={[styles.card, { backgroundColor: isDarkMode ? '#1c1c1e' : '#fff' }]}>
-      <Image source={image} style={styles.image} />
+      <Image source={imageUrl} style={styles.image} />
       <Text style={[styles.title, { color: isDarkMode ? '#fff' : '#000' }]}>{title}</Text>
       <Text style={[styles.subtitle, { color: isDarkMode ? '#aaa' : '#555' }]}>{subtitle}</Text>
       <View style={styles.infoRow}>
         <FontAwesome name="star" size={14} color="#f5a623" />
         <Text style={styles.infoText}>{rating}</Text>
-        <Feather name="clock" size={14} color="#f5a623" style={{ marginLeft: 10 }} />
-        <Text style={styles.infoText}>{location}</Text>
+        {price !== undefined && (
+        <Text style={[styles.subtitle, { color: isDarkMode ? '#aaa' : '#555' }]}>
+          Price: ${price.toFixed(2)}
+        </Text>
+      )}
       </View>
     </View>
   );

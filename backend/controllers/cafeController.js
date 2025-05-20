@@ -42,23 +42,24 @@ exports.getCategoriesByCafe = async (req, res) => {
 // @route   GET /api/categories/:categoryId/items
 // @access  Public
 exports.getItemsByCategory = async (req, res) => {
-    try {
-        const categoryId = req.params.categoryId;
-        const items = await Item.find({ category: categoryId }).select('name description price -__v');
+  try {
+    const categoryId = req.params.categoryId;
+    
+    const items = await Item.find({ category: categoryId })
+      .select('name description price'); 
 
-        if (!items || items.length === 0) {
-            return res.status(404).json({ message: 'No items found for this category or category does not exist' });
-        }
-
-
-        res.json(items);
-    } catch (err) {
-        console.error(err);
-        if (err.kind === 'ObjectId') {
-            return res.status(400).json({ message: 'Invalid Category ID format' });
-        }
-        res.status(500).json({ message: 'Server Error' });
+    if (!items || items.length === 0) {
+      return res.status(404).json({ message: 'No items found for this category or category does not exist' });
     }
+
+    res.json(items);
+  } catch (err) {
+    console.error(err);
+    if (err.kind === 'ObjectId') {
+      return res.status(400).json({ message: 'Invalid Category ID format' });
+    }
+    res.status(500).json({ message: 'Server Error' });
+  }
 };
 
 // @desc    Get a specific item by ID

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, FlatList, ActivityIndicator } from 'react-native';
 import MenuItemCard from '../components/MenuItemCard';
 import { getCategoriesByCafe } from '../utils/api';
+import { useNavigation } from '@react-navigation/native';
 import { useRoute } from '@react-navigation/native';
 
 const CategoryItemListScreen = () => {
@@ -34,22 +35,29 @@ const CategoryItemListScreen = () => {
     fetchItems();
   }, [cafeId]);
 
-  const renderItem = ({ item }) => (
-    <MenuItemCard
-      item={item}
-      imageUrl={
-        item.imageUrl
-        && { uri: item.imageUrl }
+  const navigation = useNavigation();
 
-      }
-      name={item.name}
-      onPress={(selectedItem) => {
-        console.log('Item pressed:', selectedItem.name);
-      }}
-      showAddButton={false}
-    />
+
+  const handleNavigate = (category) => {
+  console.log('Navigating to category:', category.name, 'with ID:', category._id);
+  navigation.navigate('TypesScreen', {
+    categoryId: category._id,
+    categoryName: category.name,
+  });
+  };
+
+
+  const renderItem = ({ item }) => (
+  <MenuItemCard
+    item={item}
+    imageUrl={item.imageUrl && { uri: item.imageUrl }}
+    name={item.name}
+    onPress={() => handleNavigate(item)}
+    showAddButton={false}
+  />
   );
 
+  
   return (
     <View style={styles.container}>
       {cafeName && <Text style={styles.heading}>{cafeName}</Text>}
