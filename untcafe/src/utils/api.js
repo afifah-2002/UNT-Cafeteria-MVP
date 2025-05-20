@@ -17,10 +17,8 @@ export const getAllCafes = async () => {
 
 export const getCategoriesByCafe = async (cafeId) => {
   try {
-    console.log('HIHIHIH')
 
     const response = await api.get(`/api/cafes/${cafeId}/categories`);
-    console.log(response.data)
     return response.data;
   } catch (error) {
     console.error('Error fetching categories:', error);
