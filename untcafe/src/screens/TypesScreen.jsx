@@ -1,5 +1,6 @@
 // screens/TypesScreen.js
 import React, { useEffect, useState } from 'react';
+
 import {
   View, Text, StyleSheet, TouchableOpacity,
   ActivityIndicator, FlatList

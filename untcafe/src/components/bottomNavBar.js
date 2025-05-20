@@ -1,33 +1,59 @@
 import React from 'react';
-import { View, TouchableOpacity, StyleSheet, useColorScheme } from 'react-native';
+import {
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  useColorScheme,
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const BottomNavBar = () => {
   const navigation = useNavigation();
   const isDarkMode = useColorScheme() === 'dark';
 
   const iconColor = isDarkMode ? '#ffffff' : '#000000';
-  const bgColor = isDarkMode ? '#1c1c1e' : '#fff';
+  const bgColor = isDarkMode ? '#1c1c1e' : '#ffffff';
 
   return (
-    <View style={[styles.container, { backgroundColor: bgColor }]}>
-      <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+    <SafeAreaView edges={['bottom']} style={[styles.container, { backgroundColor: bgColor }]}>
+      <TouchableOpacity
+        style={styles.navButton}
+        onPress={() => navigation.navigate('Home')}
+        accessibilityRole="button"
+        accessibilityLabel="Go to Home"
+      >
         <Feather name="home" size={22} color={iconColor} />
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
+      <TouchableOpacity
+        style={styles.navButton}
+        onPress={() => navigation.navigate('CartScreen')}
+        accessibilityRole="button"
+        accessibilityLabel="Go to Cart"
+      >
         <Feather name="shopping-cart" size={22} color={iconColor} />
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
+      <TouchableOpacity
+        style={styles.navButton}
+        onPress={() => navigation.navigate('Notifications')}
+        accessibilityRole="button"
+        accessibilityLabel="Go to Notifications"
+      >
         <Feather name="bell" size={22} color={iconColor} />
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+      <TouchableOpacity
+        style={styles.navButton}
+        onPress={() => navigation.navigate('Profile')}
+        accessibilityRole="button"
+        accessibilityLabel="Go to Profile"
+      >
         <Feather name="user" size={22} color={iconColor} />
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -36,10 +62,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    height: '10%',
-    paddingVertical: 10,
-    borderTopWidth: 0.5,
-    borderColor: '#ccc',
+    height: 70,
+    borderTopWidth: 0,
+    // borderColor: '#ccc',
     position: 'absolute',
     bottom: 0,
     width: '100%',
@@ -55,7 +80,7 @@ const styles = StyleSheet.create({
   },
   navButton: {
     padding: 10,
-  }
+  },
 });
 
 export default BottomNavBar;
