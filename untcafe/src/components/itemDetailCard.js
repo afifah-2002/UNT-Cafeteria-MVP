@@ -25,18 +25,19 @@ const ItemDetailCard = ({ item, onClose, categoryId, addOns }) => {
   const [open, setOpen] = useState(false);
   const [addOnItems, setAddOnItems] = useState([]);
 
-useEffect(() => {
+  useEffect(() => {
     console.log('Add-ons:', addOns);
-  if (addOns && addOns.length > 0) {
-    const formatted = addOns.map((addon) => ({
-      label: `${addon.name} +$${addon.price.toFixed(2)}`,
-      value: addon.name,
-    }));
-    setAddOnItems(formatted);
-  } else {
-    setAddOnItems([]); // clear if no add-ons
-  }
-}, [addOns]);
+    if (addOns && addOns.length > 0) {
+      const formatted = addOns.map((addon) => ({
+        label: `${addon.name} +$${addon.price.toFixed(2)}`,
+        value: addon.name,
+        price: addon.price,
+      }));
+      setAddOnItems(formatted);
+    } else {
+      setAddOnItems([]); // clear if no add-ons
+    }
+  }, [addOns]);
 
 
   const calculateTotal = () => {
@@ -51,63 +52,64 @@ useEffect(() => {
   const decrease = () => quantity > 0 && setQuantity(quantity - 1);
 
 
-// const addToCart = () => {
-//   if (quantity === 0) return;
+  // const addToCart = () => {
+  //   if (quantity === 0) return;
 
-//   const selectedAddOnObjects = addOnItems.filter((addon) =>
-//     selectedAddOns.includes(addon.value)
-//   );
+  //   const selectedAddOnObjects = addOnItems.filter((addon) =>
+  //     selectedAddOns.includes(addon.value)
+  //   );
 
-// dispatch({
-//   type: 'ADD_TO_CART',
-//   payload: {
-//     itemId: item._id,
-//     name: item.name,
-//     price: item.price,
-//     quantity,
-//     addOns: selectedAddOns.map((selected) => {
-//       const found = addOnItems.find((a) => a.value === selected || a.name === selected);
-//       return {
-//         name: selected,
-//         price: found?.price || 0,
-//       };
-//     }),
-//   },
-// });
-
-
-//   onClose();
-// };
+  // dispatch({
+  //   type: 'ADD_TO_CART',
+  //   payload: {
+  //     itemId: item._id,
+  //     name: item.name,
+  //     price: item.price,
+  //     quantity,
+  //     addOns: selectedAddOns.map((selected) => {
+  //       const found = addOnItems.find((a) => a.value === selected || a.name === selected);
+  //       return {
+  //         name: selected,
+  //         price: found?.price || 0,
+  //       };
+  //     }),
+  //   },
+  // });
 
 
-const addToCart = () => {
-  if (quantity === 0) return;
+  //   onClose();
+  // };
 
-  const addOnPayload = selectedAddOns.map((selected) => {
-    const found = addOnItems.find((a) => a.value === selected || a.name === selected);
-    const price = found?.price || 0;
 
-    console.log(`Selected Add-On: ${selected}, Found:`, found, `Price: ${price}`);
+  const addToCart = () => {
+    if (quantity === 0) return;
 
-    return {
-      name: selected,
-      price,
-    };
-  });
+    const addOnPayload = selectedAddOns.map((selected) => {
+      const found = addOnItems.find((a) => a.value === selected || a.name === selected);
+      const price = found?.price || 0;
 
-  dispatch({
-    type: 'ADD_TO_CART',
-    payload: {
-      itemId: item._id,
-      name: item.name,
-      price: item.price,
-      quantity,
-      addOns: addOnPayload,
-    },
-  });
+      console.log(`Selected Add-On: ${selected}, Found:`, found, `Price: ${price}`);
 
-  onClose();
-};
+      return {
+        name: selected,
+        price,
+      };
+    });
+
+    dispatch({
+      type: 'ADD_TO_CART',
+      payload: {
+        itemId: item._id,
+        name: item.name,
+        price: item.price,
+        quantity,
+        addOns: addOnPayload,
+        totalUnitPrice: item.price + addOnPayload.reduce((acc, a) => acc + a.price, 0),
+      },
+    });
+
+    onClose();
+  };
 
   return (
     <View style={styles.wrapper}>

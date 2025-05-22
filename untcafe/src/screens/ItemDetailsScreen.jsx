@@ -14,30 +14,28 @@ const ItemDetailsScreen = () => {
   const [loading, setLoading] = useState(true);
 
 
-useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const fetchedItem = await getItemById(itemId);
-      setItem(fetchedItem);
-        console.log('Fetched item:', fetchedItem);
-      if (fetchedItem.category) {
-        console.log('Fetching add-ons for category ID:', fetchedItem.category);
-        const fetchedAddOns = await getAddOnsByCategory(fetchedItem.category);
-        console.log('Fetched add-ons:', fetchedAddOns);
-        setAddOns(fetchedAddOns);
-      } else {
-        console.warn('No category ID found in item.');
-        setAddOns([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const fetchedItem = await getItemById(itemId);
+        setItem(fetchedItem);
+        if (fetchedItem.category) {
+          console.log('Fetching add-ons for category ID:', fetchedItem.category);
+          const fetchedAddOns = await getAddOnsByCategory(fetchedItem.category);
+          setAddOns(fetchedAddOns);
+        } else {
+          console.warn('No category ID found in item.');
+          setAddOns([]);
+        }
+      } catch (error) {
+        console.error('Error while fetching item/add-ons:', error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error('Error while fetching item/add-ons:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
 
-  fetchData();
-}, [itemId]);
+    fetchData();
+  }, [itemId]);
 
   if (loading) {
     return (

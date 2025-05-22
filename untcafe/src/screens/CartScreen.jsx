@@ -10,8 +10,8 @@ export default function CartScreen({ navigation }) {
   const cartItems = useSelector((state) => state.cart.items);
   const dispatch = useDispatch();
 
-  const removeItem = (itemId) => {
-    dispatch({ type: 'REMOVE_FROM_CART', payload: itemId });
+  const removeItem = (itemId, addOns) => {
+    dispatch({ type: 'REMOVE_FROM_CART', payload: { itemId, addOns } });
   };
 
   const clearCart = () => {
@@ -46,6 +46,7 @@ export default function CartScreen({ navigation }) {
                 type: 'UPDATE_QUANTITY',
                 payload: {
                   itemId: item.itemId,
+                  addOns: item.addOns,
                   quantity: Math.max(1, item.quantity - 1),
                 },
               })
@@ -63,6 +64,7 @@ export default function CartScreen({ navigation }) {
                 type: 'UPDATE_QUANTITY',
                 payload: {
                   itemId: item.itemId,
+                  addOns: item.addOns,
                   quantity: item.quantity + 1,
                 },
               })
@@ -73,7 +75,7 @@ export default function CartScreen({ navigation }) {
 
           <Text style={styles.totalPrice}>${itemTotal.toFixed(2)}</Text>
 
-          <TouchableOpacity onPress={() => removeItem(item.itemId)} style={styles.trashBtn}>
+          <TouchableOpacity onPress={() => removeItem(item.itemId, item.addOns)} style={styles.trashBtn}>
             <Icon name="trash-outline" size={20} color="#fff" />
           </TouchableOpacity>
         </View>
@@ -92,7 +94,11 @@ export default function CartScreen({ navigation }) {
           <>
             <FlatList
               data={cartItems}
-              keyExtractor={(item) => item.itemId}
+              keyExtractor={(item) => {
+                const sortedAddOns = [...item.addOns].sort((a, b) => (a.name > b.name ? 1 : -1));
+                return `${item.itemId}-${JSON.stringify(item.addOns)}`
+              }
+              }
               renderItem={renderItem}
             />
 

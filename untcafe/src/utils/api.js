@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const Ipv4 = 'http://192.168.1.100:5000'; // Updated to your local network IP
+const Ipv4 = 'http://192.168.1.138:5000'; // Updated to your local network IP
 const api = axios.create({
   baseURL: Ipv4,
 });
@@ -27,18 +27,18 @@ export const getCategoriesByCafe = async (cafeId) => {
   }
 };
 
-export const getItemsByCategory = async(categoryId)  => {
+export const getItemsByCategory = async (categoryId) => {
   try {
     console.log('Trying to fetch data , No worries ..!')
     const res = await api.get(`/api/categories/${categoryId}/items`);
-    return res.data; 
-  } catch(error){
-    console.log('error while fetching data :',error);
+    return res.data;
+  } catch (error) {
+    console.log('error while fetching data :', error);
     throw error
   }
 
 };
-  
+
 export const getItemById = async (itemId) => {
   try {
     console.log('Fetching item details for ID:', itemId);
@@ -64,7 +64,7 @@ export const getAddOnsByCategory = async (categoryId) => {
   }
 };
 
-            
+
 
 
 export default api;
