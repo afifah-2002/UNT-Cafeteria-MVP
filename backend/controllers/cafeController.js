@@ -1,6 +1,9 @@
 const Cafe = require('../models/cafeModel.js');
 const Category = require('../models/categoryModel.js');
 const Item = require('../models/itemModel.js');
+const AddOn = require('../models/addOnModel'); // adjust the path if needed
+
+
 
 // @desc    Get all cafes
 // @route   GET /api/cafes
@@ -46,7 +49,7 @@ exports.getItemsByCategory = async (req, res) => {
     const categoryId = req.params.categoryId;
     
     const items = await Item.find({ category: categoryId })
-      .select('name description price'); 
+      .select('name description price imageUrl'); 
 
     if (!items || items.length === 0) {
       return res.status(404).json({ message: 'No items found for this category or category does not exist' });
@@ -68,7 +71,7 @@ exports.getItemsByCategory = async (req, res) => {
 exports.getItemById = async (req, res) => {
     try {
         const itemId = req.params.itemId;
-        const item = await Item.findById(itemId).select('name description price -__v');
+        const item = await Item.findById(itemId).select('name description price imageUrl category');
 
         if (!item) {
             return res.status(404).json({ message: 'Item not found' });
@@ -166,4 +169,51 @@ exports.createItemForCategory = async (req, res) => {
         }
         res.status(400).json({ message: err.message });
     }
+};
+
+
+
+// @desc    Create a new add-on for a category
+// @route   POST /api/categories/:categoryId/addons
+// @access  Public (you can protect it later)
+exports.createAddOn = async (req, res) => {
+  try {
+    const categoryId = req.params.categoryId;
+
+    // Optional: Validate category existence
+    const categoryExists = await Category.findById(categoryId);
+    if (!categoryExists) {
+      return res.status(404).json({ message: 'Category not found' });
+    }
+
+    const { name, price } = req.body;
+
+    const newAddOn = new AddOn({
+      name,
+      price,
+      category: categoryId,
+    });
+
+    const savedAddOn = await newAddOn.save();
+    res.status(201).json(savedAddOn);
+  } catch (err) {
+    console.error('Error creating add-on:', err);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
+// @desc    Get all add-ons for a specific category
+// @route   GET /api/categories/:categoryId/addons
+// @access  Public
+exports.getAddOnsByCategory = async (req, res) => {
+  try {
+    const categoryId = req.params.categoryId;
+
+    const addOns = await AddOn.find({ category: categoryId }).select('name price');
+
+    res.json(addOns);
+  } catch (err) {
+    console.error('Error fetching add-ons:', err);
+    res.status(500).json({ message: 'Server Error' });
+  }
 };

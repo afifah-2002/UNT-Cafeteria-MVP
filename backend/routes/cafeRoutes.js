@@ -34,5 +34,10 @@ router.post('/categories/:categoryId/items', cafeController.createItemForCategor
 // @desc    Handle user login
 router.post('/login', authController.login);
 
+// POST new add-on to a category
+router.post('/categories/:categoryId/addons', cafeController.createAddOn);
+
+// GET all add-ons for a category
+router.get('/categories/:categoryId/addons', cafeController.getAddOnsByCategory);
 
 module.exports = router;
