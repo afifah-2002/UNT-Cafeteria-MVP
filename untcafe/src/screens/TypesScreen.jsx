@@ -8,6 +8,8 @@ import {
 import { useRoute, useNavigation } from '@react-navigation/native';
 import RestaurantCard from '../components/RestaurantCard';
 import {  getItemsByCategory } from '../utils/api';    
+import BottomNavBar from '../components/bottomNavBar';
+
 
 
 const TypesScreen = () => {
@@ -44,24 +46,19 @@ const TypesScreen = () => {
     fetchTypes();
   }, [categoryId]);
 
-  
-  /* When a type is tapped → navigate to next screen */
-  
-  /*const handleNavigate = (items) => {
-    navigation.navigate('', {
-      itemId: items._id,
-      itemName: items.name
-    });
-  };
 
-  
-  How each row looks in FlatList   */
+  const handleNavigate = (item) => {
+  navigation.navigate('ItemDetails', {
+    itemId: item._id,
+  });
+};
+
   
   const renderItem = ({ item }) => (
     <TouchableOpacity key={item._id} onPress={() => handleNavigate(item)}>
       <RestaurantCard
         item={item}
-        image={item.imageURL ? { uri: item.imageURL } : require('../../assets/adaptive-icon.png')}
+        image={item.imageUrl ? { uri: item.imageUrl } : require('../../assets/adaptive-icon.png')}
         subtitle={item.description || ''}
         price = {item.price}
                    
@@ -73,6 +70,7 @@ const TypesScreen = () => {
 
   
   return (
+     <View style={{ flex: 1 }}>
     <View style={styles.container}>
       {categoryName && <Text style={styles.heading}>{categoryName}</Text>}
 
@@ -90,6 +88,10 @@ const TypesScreen = () => {
       ) : (
         <Text style={styles.placeholder}>No types found.</Text>
       )}
+    
+    </View>
+
+    <BottomNavBar />
     </View>
   );
 };

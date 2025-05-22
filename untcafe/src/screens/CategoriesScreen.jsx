@@ -5,6 +5,7 @@ import MenuItemCard from '../components/MenuItemCard';
 import { getCategoriesByCafe } from '../utils/api';
 import { useNavigation } from '@react-navigation/native';
 import { useRoute } from '@react-navigation/native';
+import BottomNavBar from '../components/bottomNavBar';
 
 const CategoryItemListScreen = () => {
   const [items, setItems] = useState([]);
@@ -59,6 +60,7 @@ const CategoryItemListScreen = () => {
 
   
   return (
+    <View style={{ flex: 1 }}>
     <View style={styles.container}>
       {cafeName && <Text style={styles.heading}>{cafeName}</Text>}
 
@@ -76,6 +78,8 @@ const CategoryItemListScreen = () => {
       ) : (
         <Text style={styles.placeholder}>No items found for this category.</Text>
       )}
+    </View>
+    <BottomNavBar/>
     </View>
   );
 };

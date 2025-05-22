@@ -17,6 +17,7 @@ import TypesScreen from './src/screens/TypesScreen';
 import MyUNTHeaderTitle from './src/components/MyUNTHeaderTitle.js';
 import CartScreen from './src/screens/CartScreen';
 import CheckoutScreen from './src/screens/CheckoutScreen.jsx';
+import ItemDetailsScreen from './src/screens/ItemDetailsScreen';
 
 
 const Stack = createStackNavigator();
@@ -78,6 +79,12 @@ export default function App() {
               title: 'Types',
             }}
           />
+          <Stack.Screen 
+          name="ItemDetails"
+          component={ItemDetailsScreen} 
+           options={{headerShown: false }}
+          />
+
           <Stack.Screen
             name="CartScreen"
             component={CartScreen}

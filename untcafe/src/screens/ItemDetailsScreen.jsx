@@ -19,10 +19,11 @@ useEffect(() => {
     try {
       const fetchedItem = await getItemById(itemId);
       setItem(fetchedItem);
-
+        console.log('Fetched item:', fetchedItem);
       if (fetchedItem.category) {
         console.log('Fetching add-ons for category ID:', fetchedItem.category);
         const fetchedAddOns = await getAddOnsByCategory(fetchedItem.category);
+        console.log('Fetched add-ons:', fetchedAddOns);
         setAddOns(fetchedAddOns);
       } else {
         console.warn('No category ID found in item.');

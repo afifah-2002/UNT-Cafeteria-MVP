@@ -26,6 +26,7 @@ const ItemDetailCard = ({ item, onClose, categoryId, addOns }) => {
   const [addOnItems, setAddOnItems] = useState([]);
 
 useEffect(() => {
+    console.log('Add-ons:', addOns);
   if (addOns && addOns.length > 0) {
     const formatted = addOns.map((addon) => ({
       label: `${addon.name} +$${addon.price.toFixed(2)}`,
@@ -50,12 +51,49 @@ useEffect(() => {
   const decrease = () => quantity > 0 && setQuantity(quantity - 1);
 
 
+// const addToCart = () => {
+//   if (quantity === 0) return;
+
+//   const selectedAddOnObjects = addOnItems.filter((addon) =>
+//     selectedAddOns.includes(addon.value)
+//   );
+
+// dispatch({
+//   type: 'ADD_TO_CART',
+//   payload: {
+//     itemId: item._id,
+//     name: item.name,
+//     price: item.price,
+//     quantity,
+//     addOns: selectedAddOns.map((selected) => {
+//       const found = addOnItems.find((a) => a.value === selected || a.name === selected);
+//       return {
+//         name: selected,
+//         price: found?.price || 0,
+//       };
+//     }),
+//   },
+// });
+
+
+//   onClose();
+// };
+
+
 const addToCart = () => {
   if (quantity === 0) return;
 
-  const selectedAddOnObjects = addOnItems.filter((addon) =>
-    selectedAddOns.includes(addon.value)
-  );
+  const addOnPayload = selectedAddOns.map((selected) => {
+    const found = addOnItems.find((a) => a.value === selected || a.name === selected);
+    const price = found?.price || 0;
+
+    console.log(`Selected Add-On: ${selected}, Found:`, found, `Price: ${price}`);
+
+    return {
+      name: selected,
+      price,
+    };
+  });
 
   dispatch({
     type: 'ADD_TO_CART',
@@ -64,13 +102,12 @@ const addToCart = () => {
       name: item.name,
       price: item.price,
       quantity,
-      addOns: selectedAddOnObjects, // full objects with label+value
+      addOns: addOnPayload,
     },
   });
 
   onClose();
 };
-
 
   return (
     <View style={styles.wrapper}>
