@@ -28,7 +28,7 @@ export const login = async (euid, password, navigation) => {
         const result = await authLogin(euid, password);
 
         if (result.success) {
-            console.log('Login successful, navigating to Home.');
+            console.log('Login successful, navigating to Home., ', result.userId);
             navigation.navigate('Home');
         }
     } catch (error) {
