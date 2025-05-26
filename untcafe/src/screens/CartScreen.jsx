@@ -1,14 +1,17 @@
-
-
+// src/screens/CartScreen.js
 import React from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useNavigation } from '@react-navigation/native';
 import BottomNavBar from '../components/bottomNavBar';
 
-export default function CartScreen({ navigation }) {
-  const cartItems = useSelector((state) => state.cart.items);
+export default function CartScreen() {
+  const cartItems = useSelector((state) => state.cart?.items || []);
   const dispatch = useDispatch();
+  const navigation = useNavigation();
+
+  console.log('Cart items state:', cartItems); // Debug log
 
   const removeItem = (itemId, addOns) => {
     dispatch({ type: 'REMOVE_FROM_CART', payload: { itemId, addOns } });
@@ -30,14 +33,12 @@ export default function CartScreen({ navigation }) {
         <View style={styles.itemDetails}>
           <Text style={styles.itemName}>{item.name}</Text>
           <Text style={styles.itemSub}>${item.price.toFixed(2)} each</Text>
-
           {item.addOns?.length > 0 && (
             <Text style={styles.itemSub}>
               Add-ons: {item.addOns.map((a) => a.name || a.value).join(', ')}
             </Text>
           )}
         </View>
-
         <View style={styles.actions}>
           <TouchableOpacity
             style={styles.qtyBtn}
@@ -54,9 +55,7 @@ export default function CartScreen({ navigation }) {
           >
             <Text style={styles.qtyBtnText}>−</Text>
           </TouchableOpacity>
-
           <Text style={styles.quantity}>{item.quantity}</Text>
-
           <TouchableOpacity
             style={styles.qtyBtn}
             onPress={() =>
@@ -72,9 +71,7 @@ export default function CartScreen({ navigation }) {
           >
             <Text style={styles.qtyBtnText}>+</Text>
           </TouchableOpacity>
-
           <Text style={styles.totalPrice}>${itemTotal.toFixed(2)}</Text>
-
           <TouchableOpacity onPress={() => removeItem(item.itemId, item.addOns)} style={styles.trashBtn}>
             <Icon name="trash-outline" size={20} color="#fff" />
           </TouchableOpacity>
@@ -87,7 +84,6 @@ export default function CartScreen({ navigation }) {
     <View style={{ flex: 1 }}>
       <View style={styles.container}>
         <Text style={styles.title}>🛒 Your Cart</Text>
-
         {cartItems.length === 0 ? (
           <Text style={styles.emptyText}>Your cart is empty</Text>
         ) : (
@@ -96,17 +92,14 @@ export default function CartScreen({ navigation }) {
               data={cartItems}
               keyExtractor={(item) => {
                 const sortedAddOns = [...item.addOns].sort((a, b) => (a.name > b.name ? 1 : -1));
-                return `${item.itemId}-${JSON.stringify(item.addOns)}`
-              }
-              }
+                return `${item.itemId}-${JSON.stringify(sortedAddOns)}`;
+              }}
               renderItem={renderItem}
             />
-
             <View style={styles.totalContainer}>
               <Text style={styles.totalText}>Total:</Text>
               <Text style={styles.totalAmount}>${totalPrice.toFixed(2)}</Text>
             </View>
-
             <TouchableOpacity
               onPress={() => navigation.navigate('Checkout')}
               style={styles.checkoutButton}

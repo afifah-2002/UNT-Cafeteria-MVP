@@ -1,5 +1,9 @@
 const initialState = {
   items: [],
+  promoCode: '',
+  discount: 0,
+  taxRate: 0.08, // 8% tax
+  total: 0,
 };
 
 export default function cartReducer(state = initialState, action) {
@@ -11,8 +15,8 @@ export default function cartReducer(state = initialState, action) {
       addon.name === sortedA2[index].name && addon.price === sortedA2[index].price
     );
   };
-  switch (action.type) {
 
+  switch (action.type) {
     case 'ADD_TO_CART': {
       const { itemId, name, price, quantity, addOns = [] } = action.payload;
 
@@ -20,19 +24,19 @@ export default function cartReducer(state = initialState, action) {
       const totalUnitPrice = price + addOnsTotal;
 
       const existingItem = state.items.find(
-        item => item.itemId === itemId && areAddOnsEqual(item.addOns, addOns)
+        (item) => item.itemId === itemId && areAddOnsEqual(item.addOns, addOns)
       );
 
       if (existingItem) {
         return {
           ...state,
-          items: state.items.map(item =>
+          items: state.items.map((item) =>
             item === existingItem
               ? {
-                ...item,
-                quantity: item.quantity + quantity,
-                itemTotalPrice: (item.quantity + quantity) * item.totalUnitPrice,
-              }
+                  ...item,
+                  quantity: item.quantity + quantity,
+                  itemTotalPrice: (item.quantity + quantity) * item.totalUnitPrice,
+                }
               : item
           ),
         };
@@ -55,16 +59,13 @@ export default function cartReducer(state = initialState, action) {
       }
     }
 
-
-
-
     case 'REMOVE_FROM_CART': {
       const { itemId, addOns = [] } = action.payload;
 
       return {
         ...state,
         items: state.items.filter(
-          item => !(item.itemId === itemId && areAddOnsEqual(item.addOns, addOns))
+          (item) => !(item.itemId === itemId && areAddOnsEqual(item.addOns, addOns))
         ),
       };
     }
@@ -77,20 +78,33 @@ export default function cartReducer(state = initialState, action) {
 
       return {
         ...state,
-        items: state.items.map(item =>
+        items: state.items.map((item) =>
           item.itemId === itemId && areAddOnsEqual(item.addOns, addOns)
             ? {
-              ...item,
-              quantity,
-              itemTotalPrice: quantity * item.totalUnitPrice,
-            }
+                ...item,
+                quantity,
+                itemTotalPrice: quantity * item.totalUnitPrice,
+              }
             : item
         ),
       };
     }
 
+    case 'APPLY_PROMO_CODE':
+      return { ...state, promoCode: action.payload };
+
+    case 'SET_DISCOUNT':
+      return { ...state, discount: action.payload };
+
+    case 'CALCULATE_TOTAL': {
+      const subtotal = state.items.reduce((sum, item) => sum + item.itemTotalPrice, 0);
+      const tax = subtotal * state.taxRate;
+      const discount = state.promoCode === 'SAVE10' ? subtotal * 0.10 : 0;
+      return { ...state, discount, total: subtotal + tax - discount };
+    }
 
     default:
       return state;
   }
 }
+

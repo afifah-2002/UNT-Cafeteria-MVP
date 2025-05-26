@@ -1,0 +1,7 @@
+export const ADD_TO_CART = 'ADD_TO_CART';
+export const REMOVE_FROM_CART = 'REMOVE_FROM_CART';
+export const CLEAR_CART = 'CLEAR_CART';
+export const UPDATE_QUANTITY = 'UPDATE_QUANTITY';
+export const APPLY_PROMO_CODE = 'APPLY_PROMO_CODE';
+export const SET_DISCOUNT = 'SET_DISCOUNT';
+export const CALCULATE_TOTAL = 'CALCULATE_TOTAL';

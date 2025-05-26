@@ -1,9 +1,8 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-
 import { Provider } from 'react-redux';
-import { Dimensions } from 'react-native'; // Import Dimensions
+import { Dimensions } from 'react-native';
 
 // Redux
 import { store } from './src/redux/store';
@@ -15,10 +14,10 @@ import LoginScreen from './src/screens/LoginScreen';
 import CategoriesScreen from './src/screens/CategoriesScreen';
 import TypesScreen from './src/screens/TypesScreen';
 import MyUNTHeaderTitle from './src/components/MyUNTHeaderTitle.js';
+import CheckoutScreen from './src/screens/CheckoutScreen';
 import CartScreen from './src/screens/CartScreen';
-import CheckoutScreen from './src/screens/CheckoutScreen.jsx';
+import ManagePayment from './src/screens/ManagePayment'
 import ItemDetailsScreen from './src/screens/ItemDetailsScreen';
-
 
 const Stack = createStackNavigator();
 
@@ -59,9 +58,8 @@ export default function App() {
               },
               headerTransparent: false,
               headerLeft: () => null,
-              animation: 'default', //
+              animation: 'default',
             }}
-
           />
           {/* Grill Menu */}
           <Stack.Screen
@@ -79,19 +77,23 @@ export default function App() {
               title: 'Types',
             }}
           />
-          <Stack.Screen 
-          name="ItemDetails"
-          component={ItemDetailsScreen} 
-           options={{headerShown: false }}
+          <Stack.Screen
+            name="ItemDetails"
+            component={ItemDetailsScreen}
+            options={{ headerShown: false }}
           />
-
           <Stack.Screen
             name="CartScreen"
             component={CartScreen}
             options={{ title: 'Cart', headerShown: false }}
           />
+          <Stack.Screen
+            name="Checkout"
+            component={CheckoutScreen}
+            options={{ title: 'Checkout' }} // Optional: Add a title or other options
+          />
+          <Stack.Screen name="ManagePayment" component={ManagePayment} />
         </Stack.Navigator>
-        <Stack.Screen name="Checkout" component={CheckoutScreen} />
       </NavigationContainer>
     </Provider>
   );
