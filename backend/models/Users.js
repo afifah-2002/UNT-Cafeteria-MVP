@@ -5,6 +5,7 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   name: { type: String },
   email: { type: String },
+  stripeCustomerId: { type: String, unique: true, sparse: true },
   createdAt: { type: Date, default: Date.now }
 });
 

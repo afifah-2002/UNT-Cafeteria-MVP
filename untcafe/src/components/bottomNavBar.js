@@ -127,7 +127,7 @@ const BottomNavBar = () => {
         <Feather name="bell" size={22} color={iconColor} />
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Profile')}>
+      <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('AddPaymentMethod')}>
         <Feather name="user" size={22} color={iconColor} />
       </TouchableOpacity>
     </SafeAreaView>
