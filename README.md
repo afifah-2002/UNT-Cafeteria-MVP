@@ -34,10 +34,10 @@
 ---
 
 ## 📸 Screenshots
-![WhatsAppVideo2025-05-26at3 07 23AM-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/48527c69-4cf9-4d98-be93-0057835ee539)
-
-![WhatsAppVideo2025-05-24at6 58 01PM-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/da954583-409f-497e-ba45-168d9b6e3fc5)
-
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/48527c69-4cf9-4d98-be93-0057835ee539" alt="Screenshot 1" width="200" height="400" style="margin-right: 10px;" />
+  <img src="https://github.com/user-attachments/assets/da954583-409f-497e-ba45-168d9b6e3fc5" alt="Screenshot 2" width="200" height="400" />
+</p>
 ---
 
 ## 🔧 Getting Started
