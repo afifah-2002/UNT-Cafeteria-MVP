@@ -34,7 +34,6 @@
 ---
 
 ## 📸 Screenshots
-## 📸 Screenshots
 
 <table>
   <tr>
