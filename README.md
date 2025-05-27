@@ -33,7 +33,7 @@
 
 ---
 
-## 📸 Screenshots
+## 📸 Demo
 
 <table>
   <tr>
