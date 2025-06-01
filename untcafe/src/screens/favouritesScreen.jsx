@@ -1,5 +1,5 @@
 // screens/FavouritesScreen.jsx
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -8,32 +8,40 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   StyleSheet,
+  RefreshControl,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 
 import { fetchFavorites } from '../redux/actions/FavouritesAction';
 
-const userId = '682c202cf08ba92be50a36f5';   // <-- replace with real auth later
+const userId = '682c202cf08ba92be50a36f5'; // TODO: Replace with auth
 
 export default function FavouritesScreen() {
-  const dispatch   = useDispatch();
+  const dispatch = useDispatch();
   const navigation = useNavigation();
+  const [refreshing, setRefreshing] = useState(false);
 
-  /* favourites slice */
   const { favorites = [], loading, error } = useSelector(
     (s) => s.favourites || { favorites: [], loading: false, error: null }
   );
 
-  /* fetch once on mount */
   useEffect(() => {
     dispatch(fetchFavorites(userId));
   }, [dispatch]);
+  console.log('***********************888')
+  console.log('Favorites from Redux:', favorites);
+  console.log('Loading:', loading, 'Error:', error);
 
-  /* render one favourite card */
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await dispatch(fetchFavorites(userId));
+    setRefreshing(false);
+  };
+
   const renderItem = ({ item }) => {
-    if (!item?.itemID) return null;     // defensive
-    const prod = item.itemID;           // populated product
+    if (!item?.item) return null; // Defensive check
+    const prod = item.item;
 
     return (
       <TouchableOpacity
@@ -56,8 +64,7 @@ export default function FavouritesScreen() {
     );
   };
 
-  /* loading / error / empty states */
-  if (loading) {
+  if (loading && !refreshing) {
     return (
       <View style={styles.center}>
         <ActivityIndicator size="large" color="#000" />
@@ -65,34 +72,24 @@ export default function FavouritesScreen() {
     );
   }
 
-  if (error) {
-    return (
-      <View style={styles.center}>
-        <Text style={styles.error}>{error}</Text>
-      </View>
-    );
-  }
-
-  if (favorites.length === 0) {
-    return (
-      <View style={styles.center}>
-        <Text style={styles.empty}>No favourites added yet.</Text>
-      </View>
-    );
-  }
-
-  /* list */
   return (
     <FlatList
       data={favorites}
       keyExtractor={(fav) => fav._id}
       renderItem={renderItem}
-      contentContainerStyle={styles.list}
+      contentContainerStyle={favorites.length === 0 ? styles.center : styles.list}
+      ListEmptyComponent={
+        <Text style={styles.empty}>
+          {error ? `Error: ${error}` : 'No favourites added yet.'}
+        </Text>
+      }
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
     />
   );
 }
 
-/* ───── styles ───── */
 const styles = StyleSheet.create({
   list: { padding: 16 },
   card: {
@@ -103,11 +100,9 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   image: { height: 200, width: '100%' },
-  info:  { padding: 10 },
-  name:  { fontSize: 18, fontWeight: '600' },
+  info: { padding: 10 },
+  name: { fontSize: 18, fontWeight: '600' },
   price: { marginTop: 5, color: '#666' },
-
   center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  empty:  { fontSize: 16, color: '#888' },
-  error:  { fontSize: 16, color: 'red', textAlign: 'center' },
+  empty: { fontSize: 16, color: '#888', textAlign: 'center' },
 });

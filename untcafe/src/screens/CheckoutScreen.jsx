@@ -282,11 +282,12 @@ export default function CheckoutScreen() {
   useEffect(() => {
     const fetchPaymentMethods = async () => {
       try {
-        const response = await axios.post('http://192.168.1.230:5000/stripe/get-payment-methods', {
+        const response = await axios.post('http://192.168.1.138/stripe/get-payment-methods', {
           userId: userId
         }, { timeout: 5000 });
         console.log('API Response:', response.data);
         const methods = response.data?.paymentMethods || [];
+        console.log(methods)
         if (methods.length > 0) {
           setPaymentMethod(methods[0]);
         } else {

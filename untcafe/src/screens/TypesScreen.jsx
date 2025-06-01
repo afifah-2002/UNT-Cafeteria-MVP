@@ -20,7 +20,13 @@ const TypesScreen = () => {
   const { categoryId, categoryName } = route.params || {};
   const userId = '682c202cf08ba92be50a36f5';
 
-  console.log('TypesScreen route.params:', route.params); // Debug log
+  if (!categoryId) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.errorText}>Category ID is missing from route.</Text>
+      </View>
+    );
+  }
 
   return (
     <TypesScreenContent
@@ -37,54 +43,55 @@ const TypesScreenContent = ({ userId, navigation, categoryId, categoryName }) =>
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const dispatch = useDispatch();
-  const { favorites, loading: favoritesLoading } = useSelector((state) => state.favourites || { favorites: [], loading: false });
+
+  const { favorites, loading: favoritesLoading } = useSelector(
+    (state) => state.favourites || { favorites: [], loading: false }
+  );
 
   useEffect(() => {
+    console.log('[TypesScreen] Fetching favorites...');
     dispatch(fetchFavorites(userId));
   }, [dispatch, userId]);
 
   useEffect(() => {
     const fetchTypes = async () => {
-      if (!categoryId) {
-        setError('Category ID missing.');
-        setLoading(false);
-        return;
-      }
       try {
         setLoading(true);
         setError(null);
+        console.log(`[TypesScreen] Fetching items for category ID: ${categoryId}`);
         const data = await getItemsByCategory(categoryId);
-        console.log('Fetched types:', data); // Debug log
+        console.log('[TypesScreen] API response:', data);
         setTypes(Array.isArray(data) ? data : []);
       } catch (err) {
-        console.error('Error fetching types:', err.message);
-        setError('Failed to load types.');
+        console.error('[TypesScreen] Error fetching types:', err.message);
+        setError('Failed to load items. Please try again.');
       } finally {
         setLoading(false);
       }
     };
+
     fetchTypes();
   }, [categoryId]);
 
-  console.log('Rendering TypesScreenContent with:', { categoryId, categoryName, loading, favoritesLoading, error, typesLength: types.length }); // Debug log
-
   const handleNavigate = (item) => {
-    navigation.navigate('ItemDetails', { itemId: item._id });
+    navigation.navigate('ItemDetails', { itemID: item._id });
   };
 
   const renderItem = ({ item }) => {
-    console.log('Rendering item:', item); // Debug log
+    const isFavorite = favorites.some((fav) => fav.item === item._id || fav.item?._id === item._id);
+
     return (
       <View style={styles.cardContainer}>
         <TouchableOpacity onPress={() => handleNavigate(item)}>
           <FavouritesCard
             userId={userId}
             itemId={item._id}
-            image={item.imageUrl ? { uri: item.imageUrl } : require('../../assets/adaptive-icon.png')}
+            image={item.imageUrl ? item.imageUrl : require('../../assets/adaptive-icon.png')}
             title={item.name}
             subtitle={item.description || ''}
             rating={item.rating || 'N/A'}
             price={item.price}
+            isFavorite={isFavorite}
           />
         </TouchableOpacity>
       </View>
@@ -93,13 +100,13 @@ const TypesScreenContent = ({ userId, navigation, categoryId, categoryName }) =>
 
   return (
     <View style={styles.container}>
-      <Text>Debug: CategoryName={categoryName}, Loading={loading.toString()}</Text> {/* Temporary debug */}
+      {/* UI States */}
       {loading ? (
         <ActivityIndicator size="large" color="#0000ff" style={styles.loader} />
       ) : error ? (
         <Text style={styles.errorText}>{error}</Text>
       ) : types.length === 0 ? (
-        <Text style={styles.placeholder}>No items found.</Text>
+        <Text style={styles.placeholder}>No items found in this category.</Text>
       ) : (
         <FlatList
           data={types}
@@ -108,6 +115,7 @@ const TypesScreenContent = ({ userId, navigation, categoryId, categoryName }) =>
           contentContainerStyle={styles.listContent}
         />
       )}
+
       <BottomNavBar />
     </View>
   );
@@ -120,12 +128,6 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingBottom: 16,
-  },
-  heading: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 12,
-    textAlign: 'center',
   },
   loader: {
     marginTop: 20,
@@ -145,6 +147,10 @@ const styles = StyleSheet.create({
   cardContainer: {
     marginBottom: 10,
     alignItems: 'center',
+  },
+  debugText: {
+    fontWeight: 'bold',
+    marginBottom: 8,
   },
 });
 

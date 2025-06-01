@@ -18,8 +18,7 @@ export const fetchFavoritesFailure = (error) => ({
 export const fetchFavorites = (userId) => async (dispatch) => {
   dispatch(fetchFavoritesRequest());
   try {
-    const response = await axios.get(`http://192.168.1.230:5000/favourites/${userId}`);
-
+    const response = await axios.get(`http://192.168.1.138:5000/favourites/${userId}`);
     const favorites = response.data.map(fav => ({
       _id: fav._id,
       userId: fav.userId,
@@ -53,7 +52,7 @@ export const addFavoriteFailure = (error) => ({
 });
 
 export const addFavorite = ({ userId, itemId }) => async (dispatch) => {
-console.log('Add Favorite payload:', { userId, itemId }); // Debug log
+  console.log('Add Favorite payload:', { userId, itemId }); // Debug log
   dispatch(addFavoriteRequest());
   try {
     const response = await axios.post('http://192.168.1.230:5000/favourites', {

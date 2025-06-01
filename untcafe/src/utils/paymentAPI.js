@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Alert } from 'react-native';
 
-const BACKEND_URL = 'http://192.168.1.230:5000';
+const BACKEND_URL = 'http://192.168.1.138:5000';
 
 const paymentAPI = {
   fetchSetupIntentClientSecret: async () => {

@@ -45,32 +45,39 @@ exports.getCategoriesByCafe = async (req, res) => {
 // @route   GET /api/categories/:categoryId/items
 // @access  Public
 exports.getItemsByCategory = async (req, res) => {
-  try {
-    const categoryId = req.params.categoryId;
-    
-    const items = await Item.find({ category: categoryId })
-      .select('name description price imageUrl'); 
+    try {
+        const categoryId = req.params.categoryId;
 
-    if (!items || items.length === 0) {
-      return res.status(404).json({ message: 'No items found for this category or category does not exist' });
-    }
+        const items = await Item.find({ category: categoryId })
+            .select('name description price imageUrl');
 
-    res.json(items);
-  } catch (err) {
-    console.error(err);
-    if (err.kind === 'ObjectId') {
-      return res.status(400).json({ message: 'Invalid Category ID format' });
+        if (!items || items.length === 0) {
+            return res.status(404).json({ message: 'No items found for this category or category does not exist' });
+        }
+
+        res.json(items);
+    } catch (err) {
+        console.error(err);
+        if (err.kind === 'ObjectId') {
+            return res.status(400).json({ message: 'Invalid Category ID format' });
+        }
+        res.status(500).json({ message: 'Server Error' });
     }
-    res.status(500).json({ message: 'Server Error' });
-  }
 };
 
 // @desc    Get a specific item by ID
 // @route   GET /api/items/:itemId
 // @access  Public
+
 exports.getItemById = async (req, res) => {
     try {
         const itemId = req.params.itemId;
+
+        // Validate itemId presence and format before querying
+        if (!itemId || !mongoose.Types.ObjectId.isValid(itemId)) {
+            return res.status(400).json({ message: 'Invalid or missing Item ID' });
+        }
+
         const item = await Item.findById(itemId).select('name description price imageUrl category');
 
         if (!item) {
@@ -79,9 +86,6 @@ exports.getItemById = async (req, res) => {
         res.json(item);
     } catch (err) {
         console.error(err);
-        if (err.kind === 'ObjectId') {
-            return res.status(400).json({ message: 'Invalid Item ID format' });
-        }
         res.status(500).json({ message: 'Server Error' });
     }
 };
@@ -177,43 +181,43 @@ exports.createItemForCategory = async (req, res) => {
 // @route   POST /api/categories/:categoryId/addons
 // @access  Public (you can protect it later)
 exports.createAddOn = async (req, res) => {
-  try {
-    const categoryId = req.params.categoryId;
+    try {
+        const categoryId = req.params.categoryId;
 
-    // Optional: Validate category existence
-    const categoryExists = await Category.findById(categoryId);
-    if (!categoryExists) {
-      return res.status(404).json({ message: 'Category not found' });
+        // Optional: Validate category existence
+        const categoryExists = await Category.findById(categoryId);
+        if (!categoryExists) {
+            return res.status(404).json({ message: 'Category not found' });
+        }
+
+        const { name, price } = req.body;
+
+        const newAddOn = new AddOn({
+            name,
+            price,
+            category: categoryId,
+        });
+
+        const savedAddOn = await newAddOn.save();
+        res.status(201).json(savedAddOn);
+    } catch (err) {
+        console.error('Error creating add-on:', err);
+        res.status(500).json({ message: 'Server Error' });
     }
-
-    const { name, price } = req.body;
-
-    const newAddOn = new AddOn({
-      name,
-      price,
-      category: categoryId,
-    });
-
-    const savedAddOn = await newAddOn.save();
-    res.status(201).json(savedAddOn);
-  } catch (err) {
-    console.error('Error creating add-on:', err);
-    res.status(500).json({ message: 'Server Error' });
-  }
 };
 
 // @desc    Get all add-ons for a specific category
 // @route   GET /api/categories/:categoryId/addons
 // @access  Public
 exports.getAddOnsByCategory = async (req, res) => {
-  try {
-    const categoryId = req.params.categoryId;
+    try {
+        const categoryId = req.params.categoryId;
 
-    const addOns = await AddOn.find({ category: categoryId }).select('name price');
+        const addOns = await AddOn.find({ category: categoryId }).select('name price');
 
-    res.json(addOns);
-  } catch (err) {
-    console.error('Error fetching add-ons:', err);
-    res.status(500).json({ message: 'Server Error' });
-  }
+        res.json(addOns);
+    } catch (err) {
+        console.error('Error fetching add-ons:', err);
+        res.status(500).json({ message: 'Server Error' });
+    }
 };
