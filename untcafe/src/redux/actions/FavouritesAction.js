@@ -1,6 +1,13 @@
 import * as types from '../types';
 import axios from 'axios';
 
+const API_BASE_URL = 'http://192.168.1.138:5000';
+
+const axiosInstance = axios.create({
+  baseURL: API_BASE_URL,
+  timeout: 15000,
+});
+
 export const fetchFavoritesRequest = () => ({
   type: types.FETCH_FAVORITES_REQUEST,
 });
@@ -18,16 +25,17 @@ export const fetchFavoritesFailure = (error) => ({
 export const fetchFavorites = (userId) => async (dispatch) => {
   dispatch(fetchFavoritesRequest());
   try {
-    const response = await axios.get(`http://192.168.1.138:5000/favourites/${userId}`);
+    const response = await axiosInstance.get(`/favourites/${userId}`);
     const favorites = response.data.map(fav => ({
       _id: fav._id,
-      userId: fav.userId,
-      item: fav.itemID, // <-- This ensures we have the full item object
+      userId: fav.userId || userId, // Fallback to input userId
+      item: fav.itemID,
     }));
-
+    console.log('Fetched favorites:', favorites);
     dispatch(fetchFavoritesSuccess(favorites));
   } catch (err) {
     const errorMsg = err.response?.data?.message || err.message;
+    console.log('Fetch favorites error:', errorMsg);
     if (errorMsg !== 'No favorites found for this user') {
       dispatch(fetchFavoritesFailure(errorMsg));
     } else {
@@ -35,7 +43,6 @@ export const fetchFavorites = (userId) => async (dispatch) => {
     }
   }
 };
-
 
 export const addFavoriteRequest = () => ({
   type: types.ADD_FAVORITE_REQUEST,
@@ -52,16 +59,23 @@ export const addFavoriteFailure = (error) => ({
 });
 
 export const addFavorite = ({ userId, itemId }) => async (dispatch) => {
-  console.log('Add Favorite payload:', { userId, itemId }); // Debug log
+  console.log('Add Favorite payload:', { userId, itemId });
+  if (!userId || !itemId) {
+    dispatch(addFavoriteFailure('Missing userId or itemId'));
+    return;
+  }
   dispatch(addFavoriteRequest());
   try {
-    const response = await axios.post('http://192.168.1.230:5000/favourites', {
-      UserID: userId,
-      itemID: itemId,
+    const response = await axiosInstance.post('/favourites', {
+      userId,
+      itemId,
     });
     dispatch(addFavoriteSuccess(response.data.favourite));
+    dispatch(fetchFavorites(userId));
   } catch (err) {
-    dispatch(addFavoriteFailure(err.response?.data?.message || err.message));
+    const errorMsg = err.response?.data?.message || err.message;
+    console.log('Add favorite error:', errorMsg, 'Status:', err.response?.status);
+    dispatch(addFavoriteFailure(errorMsg));
   }
 };
 
@@ -80,17 +94,24 @@ export const removeFavoriteFailure = (error) => ({
 });
 
 export const removeFavorite = ({ userId, itemId }) => async (dispatch) => {
+  console.log('Remove Favorite payload:', { userId, itemId });
+  if (!userId || !itemId) {
+    dispatch(removeFavoriteFailure('Missing userId or itemId'));
+    return;
+  }
   dispatch(removeFavoriteRequest());
   try {
-    await axios.delete(`http://192.168.1.230:5000/favourites/${userId}/${itemId}`);
-    dispatch(fetchFavorites(userId)); // Refetch to sync
+    await axiosInstance.delete(`/favourites/${userId}/${itemId}`);
     dispatch(removeFavoriteSuccess(itemId));
+    dispatch(fetchFavorites(userId));
   } catch (err) {
+    const errorMsg = err.response?.data?.message || err.message;
+    console.log('Remove favorite error:', errorMsg, 'Status:', err.response?.status);
     if (err.response?.status === 404) {
-      dispatch(fetchFavorites(userId)); // Sync on 404
       dispatch(removeFavoriteSuccess(itemId));
+      dispatch(fetchFavorites(userId));
     } else {
-      dispatch(removeFavoriteFailure(err.response?.data?.message || err.message));
+      dispatch(removeFavoriteFailure(errorMsg));
     }
   }
 };

@@ -16,6 +16,7 @@ const ItemDetailsScreen = () => {
 
 
   useEffect(() => {
+    console.log('item details: ', itemId)
     const fetchData = async () => {
       try {
         const fetchedItem = await getItemById(itemId);

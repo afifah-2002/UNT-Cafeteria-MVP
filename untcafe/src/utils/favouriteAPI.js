@@ -1,28 +1,113 @@
+import * as types from '../types';
 import axios from 'axios';
 
-const API_URL = 'http://192.168.1.138:5000';
+const API_BASE_URL = 'http://192.168.1.138:5000';
 
-export const fetchFavorites = async (userId) => {
+const axiosInstance = axios.create({
+  baseURL: API_BASE_URL,
+  timeout: 15000, // 15 seconds
+});
+
+export const fetchFavoritesRequest = () => ({
+  type: types.FETCH_FAVORITES_REQUEST,
+});
+
+export const fetchFavoritesSuccess = (favorites) => ({
+  type: types.FETCH_FAVORITES_SUCCESS,
+  payload: favorites,
+});
+
+export const fetchFavoritesFailure = (error) => ({
+  type: types.FETCH_FAVORITES_FAILURE,
+  payload: error,
+});
+
+export const fetchFavorites = (userId) => async (dispatch) => {
+  dispatch(fetchFavoritesRequest());
   try {
-    const { data } = await axios.get(`${API_URL}/favourites/${userId}`);
-    return data;
+    const response = await axiosInstance.get(`/favourites/${userId}`);
+    const favorites = response.data.map(fav => ({
+      _id: fav._id,
+      userId: fav.userId,
+      item: fav.itemID,
+    }));
+    console.log('Fetched favorites:', favorites);
+    dispatch(fetchFavoritesSuccess(favorites));
   } catch (err) {
     const errorMsg = err.response?.data?.message || err.message;
+    console.log('Fetch favorites error:', errorMsg);
     if (errorMsg !== 'No favorites found for this user') {
-      console.error('Error fetching favorites:', errorMsg);
+      dispatch(fetchFavoritesFailure(errorMsg));
+    } else {
+      dispatch(fetchFavoritesSuccess([]));
     }
-    return [];
   }
 };
 
-export const addFavorite = async (userId, itemId) => {
-  const requestBody = { UserID: userId, itemID: itemId };
-  console.log('Add Favorite request body:', requestBody); // Debug log
-  const response = await axios.post(`${API_URL}/favourites`, requestBody);
-  return response.data.favourite;
+export const addFavoriteRequest = () => ({
+  type: types.ADD_FAVORITE_REQUEST,
+});
+
+export const addFavoriteSuccess = (favorite) => ({
+  type: types.ADD_FAVORITE_SUCCESS,
+  payload: favorite,
+});
+
+export const addFavoriteFailure = (error) => ({
+  type: types.ADD_FAVORITE_FAILURE,
+  payload: error,
+});
+
+export const addFavorite = ({ userId, itemId }) => async (dispatch) => {
+  console.log('Add Favorite payload:', { userId, itemId });
+  dispatch(addFavoriteRequest());
+  try {
+    const response = await axiosInstance.post('/favourites', {
+      userId, // Lowercase
+      itemId, // Lowercase
+    });
+    dispatch(addFavoriteSuccess(response.data.favourite));
+    dispatch(fetchFavorites(userId)); // Sync favorites
+  } catch (err) {
+    const errorMsg = err.response?.data?.message || err.message;
+    console.log('Add favorite error:', errorMsg);
+    dispatch(addFavoriteFailure(errorMsg));
+  }
 };
 
-export const removeFavorite = async (userId, itemId) => {
-  console.log('Remove Favorite request params:', { userId, itemId }); // Debug log
-  await axios.delete(`${API_URL}/favourites/${userId}/${itemId}`);
+export const removeFavoriteRequest = () => ({
+  type: types.REMOVE_FAVORITE_REQUEST,
+});
+
+export const removeFavoriteSuccess = (itemId) => ({
+  type: types.REMOVE_FAVORITE_SUCCESS,
+  payload: itemId,
+});
+
+export const removeFavoriteFailure = (error) => ({
+  type: types.REMOVE_FAVORITE_FAILURE,
+  payload: error,
+});
+
+export const removeFavorite = ({ userId, itemId }) => async (dispatch) => {
+  console.log('Remove Favorite payload:', { userId, itemId });
+  dispatch(removeFavoriteRequest());
+  try {
+    await axiosInstance.delete(`/favourites/${userId}/${itemId}`);
+    dispatch(removeFavoriteSuccess(itemId));
+    dispatch(fetchFavorites(userId)); // Sync favorites
+  } catch (err) {
+    const errorMsg = err.response?.data?.message || err.message;
+    console.log('Remove favorite error:', errorMsg);
+    if (err.response?.status === 404) {
+      dispatch(removeFavoriteSuccess(itemId));
+      dispatch(fetchFavorites(userId));
+    } else {
+      dispatch(removeFavoriteFailure(errorMsg));
+    }
+  }
 };
+
+export const clearError = () => ({
+  type: types.CLEAR_ERROR,
+});

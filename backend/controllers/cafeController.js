@@ -2,7 +2,7 @@ const Cafe = require('../models/cafeModel.js');
 const Category = require('../models/categoryModel.js');
 const Item = require('../models/itemModel.js');
 const AddOn = require('../models/addOnModel'); // adjust the path if needed
-
+const mongoose = require('mongoose');
 
 
 // @desc    Get all cafes
@@ -212,7 +212,6 @@ exports.createAddOn = async (req, res) => {
 exports.getAddOnsByCategory = async (req, res) => {
     try {
         const categoryId = req.params.categoryId;
-
         const addOns = await AddOn.find({ category: categoryId }).select('name price');
 
         res.json(addOns);
