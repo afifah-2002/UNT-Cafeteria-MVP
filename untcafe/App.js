@@ -20,7 +20,8 @@ import MyUNTHeaderTitle from './src/components/MyUNTHeaderTitle.js';
 import CheckoutScreen from './src/screens/CheckoutScreen';
 import CartScreen from './src/screens/CartScreen';
 import ItemDetailsScreen from './src/screens/ItemDetailsScreen';
-import AddPaymentMethodScreen from './src/screens/AddPaymentMethodScreen'; // Create this file
+import AddPaymentMethodScreen from './src/screens/AddPaymentMethodScreen'; 
+import FavouritesScreen from './src/screens/favouritesScreen';
 
 
 const Stack = createStackNavigator();
@@ -92,6 +93,7 @@ export default function App() {
             component={ItemDetailsScreen}
             options={{ headerShown: false }}
           />
+          <Stack.Screen name="Favourites" component={FavouritesScreen} />
           <Stack.Screen
             name="CartScreen"
             component={CartScreen}

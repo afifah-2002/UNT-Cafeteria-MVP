@@ -1,6 +1,3 @@
-
-
-
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -9,12 +6,15 @@ import {
   TouchableOpacity,
   StyleSheet,
   Dimensions,
+  Alert,
 } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useDispatch } from 'react-redux';
+
 import { RFValue } from 'react-native-responsive-fontsize';
-//import { getAddOnsByCategory } from '../utils/api';
+
+import axios from 'axios';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -24,6 +24,11 @@ const ItemDetailCard = ({ item, onClose, categoryId, addOns }) => {
   const [selectedAddOns, setSelectedAddOns] = useState([]);
   const [open, setOpen] = useState(false);
   const [addOnItems, setAddOnItems] = useState([]);
+  
+
+  const userId = "682c202cf08ba92be50a36f5"; // Hardcoded userId (same as in CheckoutScreen)
+
+  
 
   useEffect(() => {
     console.log('Add-ons:', addOns);
@@ -35,10 +40,9 @@ const ItemDetailCard = ({ item, onClose, categoryId, addOns }) => {
       }));
       setAddOnItems(formatted);
     } else {
-      setAddOnItems([]); // clear if no add-ons
+      setAddOnItems([]); // Clear if no add-ons
     }
   }, [addOns]);
-
 
   const calculateTotal = () => {
     const base = item.price * quantity;
@@ -51,36 +55,7 @@ const ItemDetailCard = ({ item, onClose, categoryId, addOns }) => {
   const increase = () => quantity < 10 && setQuantity(quantity + 1);
   const decrease = () => quantity > 0 && setQuantity(quantity - 1);
 
-
-  // const addToCart = () => {
-  //   if (quantity === 0) return;
-
-  //   const selectedAddOnObjects = addOnItems.filter((addon) =>
-  //     selectedAddOns.includes(addon.value)
-  //   );
-
-  // dispatch({
-  //   type: 'ADD_TO_CART',
-  //   payload: {
-  //     itemId: item._id,
-  //     name: item.name,
-  //     price: item.price,
-  //     quantity,
-  //     addOns: selectedAddOns.map((selected) => {
-  //       const found = addOnItems.find((a) => a.value === selected || a.name === selected);
-  //       return {
-  //         name: selected,
-  //         price: found?.price || 0,
-  //       };
-  //     }),
-  //   },
-  // });
-
-
-  //   onClose();
-  // };
-
-
+  
   const addToCart = () => {
     if (quantity === 0) return;
 
@@ -126,7 +101,10 @@ const ItemDetailCard = ({ item, onClose, categoryId, addOns }) => {
 
       <Text style={styles.name}>{item.name}</Text>
       <Text style={styles.description}>{item.description}</Text>
-      <Text style={styles.price}>${item.price?.toFixed(2)} each</Text>
+      <View style={styles.priceContainer}>
+        <Text style={styles.price}>${item.price?.toFixed(2)} each</Text>
+        
+      </View>
 
       {addOnItems.length > 0 && (
         <>
@@ -204,11 +182,19 @@ const styles = StyleSheet.create({
     color: '#555',
     marginBottom: RFValue(6),
   },
+  priceContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: RFValue(12),
+  },
   price: {
     fontSize: RFValue(16),
     color: '#000',
     fontWeight: '600',
-    marginBottom: RFValue(12),
+    marginRight: RFValue(10), // Space between price and favorite icon
+  },
+  favoriteButton: {
+    padding: RFValue(5),
   },
   addOnLabel: {
     fontSize: RFValue(15),

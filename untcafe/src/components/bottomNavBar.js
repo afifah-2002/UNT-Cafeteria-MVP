@@ -96,12 +96,18 @@ import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import { Feather } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faHeart as faHeartOutline} from '@fortawesome/free-solid-svg-icons';
 
 const BottomNavBar = () => {
   const navigation = useNavigation();
   const isDarkMode = useColorScheme() === 'dark';
   const iconColor = isDarkMode ? '#ffffff' : '#000000';
   const bgColor = isDarkMode ? '#1c1c1e' : '#ffffff';
+
+const handleNavigation = (screen) => {
+  navigation.navigate(screen);
+};
 
   const cartItems = useSelector((state) => state.cart.items);
   const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0); // total quantity
@@ -129,6 +135,10 @@ const BottomNavBar = () => {
 
       <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('AddPaymentMethod')}>
         <Feather name="user" size={22} color={iconColor} />
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => handleNavigation('Favourites')}>
+      <FontAwesomeIcon icon={faHeartOutline} size={24} color="#555" />
       </TouchableOpacity>
     </SafeAreaView>
   );

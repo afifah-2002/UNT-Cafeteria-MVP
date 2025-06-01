@@ -10,6 +10,9 @@ const loginRoutes = require('./routes/loginRoutes.js');
 const stripeRoutes = require('./routes/stripeRoutes');
 const webhookRoutes = require('./routes/webhookRoutes.js');
 
+// Favourites 
+const favouriteRoutes = require('./routes/FavouritesRoutes.js');
+
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -23,6 +26,7 @@ app.use('/api', cafeRoutes);
 app.use('/api', loginRoutes);
 app.use('/stripe', stripeRoutes);
 app.use('/stripe/webhook', webhookRoutes);
+app.use('/favourites', favouriteRoutes);
 
 
 app.get('/', (req, res) => {

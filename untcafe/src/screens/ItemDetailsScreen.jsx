@@ -5,6 +5,7 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 import { getItemById, getAddOnsByCategory } from '../utils/api';
 import ItemDetailCard from '../components/itemDetailCard';
 
+
 const ItemDetailsScreen = () => {
   const route = useRoute();
   const navigation = useNavigation();

@@ -1,3 +1,4 @@
+// Used this card in home screen 
 import React from 'react';
 import { View, Text, Image, StyleSheet, useColorScheme } from 'react-native';
 import { FontAwesome, Feather } from '@expo/vector-icons';
